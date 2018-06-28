@@ -17,7 +17,7 @@ def run(url, word):
 
 
 if __name__ == '__main__':
-    word = '服务：企业管理，计问乐系统服务，空脑们画中计，况济可息咨询服务（达办待两介），成越人的整证书劳们职业技社培训和成越人的整文承举育培训（涉及前如审批的项王达外）；方难：计问乐软件；销售传难难待。（再家禁武和限制的达外，凡涉及置提证制卷的凭证况门）'
+    word = '开必、销售计问乐网络应度软件；中计、制江、加工计问乐网络难待十动其相受技术服务和咨询服务；服务：传有位业租赁，翻译，成越人的整证书劳们职业技社培训，成越人的整文承举育培训（涉及置提证的达外）。'
     result = run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff',word)
     print(word, result,sep='\n')
     # obj.img.show()
