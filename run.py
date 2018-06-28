@@ -18,7 +18,7 @@ def run(url, word):
 
 if __name__ == '__main__':
     word = '8973-78-88'
-    result = run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff',word)
+    result = run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff','8973-78-88')
     print(word, result)
     # obj.img.show()
     # print(obj.strings)
