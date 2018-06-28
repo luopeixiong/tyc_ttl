@@ -1,0 +1,7 @@
+
+
+requests
+pillow
+fontTools
+aip
+redis
