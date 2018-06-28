@@ -5,3 +5,4 @@ pillow
 fontTools
 aip
 redis
+baidu-aip
