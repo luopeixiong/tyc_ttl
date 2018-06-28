@@ -13,8 +13,8 @@ SECRET_KEY = secure.SECRET_KEY
 REDIS_URL = secure.REDIS_URL
 
 class TycTTF():
-
-    def __init__(self,url='',imgSize=(0,0),imgMode='RGB',bg_color=(0,0,0),fg_color=(255,255,255),fontsize=30):
+    _instance = {}
+    def __init__(self,url,imgSize=(0,0),imgMode='RGB',bg_color=(0,0,0),fg_color=(255,255,255),fontsize=30):
         self.imgSize = imgSize
         self.imgMode = imgMode
         self.fontsize = fontsize
@@ -23,6 +23,14 @@ class TycTTF():
         self.url = url
         self.get_ttl()
         self.client = AipClient(APP_ID, API_KEY, SECRET_KEY,REDIS_URL)
+
+    def __new__(cls, url, *args, **kw):
+        '''
+        伪单例模式 缓存优化
+        '''
+        if url not in cls._instance:
+            cls._instance[url] = super().__new__(cls)
+        return cls._instance[url]
 
     def get_ttl(self):
         res = requests.get(self.url)

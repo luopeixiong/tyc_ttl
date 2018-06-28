@@ -10,12 +10,15 @@ import os
 from core import TycTTF
 
 
+def run(url, word):
+    obj = TycTTF(url)
+    return obj.run(word)
+
 
 
 if __name__ == '__main__':
-    obj = TycTTF('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff')
-    word = '7019万内元'
-    result = obj.run(word)
+    word = '8973-78-88'
+    result = run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff',word)
     print(word, result)
     # obj.img.show()
     # print(obj.strings)

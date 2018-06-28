@@ -17,6 +17,15 @@ class AipClient(object):
         self.client = AipOcr(appid, api_key, secrrt_key)
         self.redis = RedisClient(redis_url)
 
+    def __new__(cls, *args, **kw):
+        '''
+        api 单例模式
+        '''
+        if not hasattr(cls, '_instance'):
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+
     @property
     def options(self):
         return {"language_type":"CHN_ENG",
