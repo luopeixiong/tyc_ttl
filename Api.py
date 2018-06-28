@@ -3,8 +3,8 @@
 from db import RedisClient
 from aip import AipOcr
 from helper import MD5
-
-
+from PIL import Image
+from io import BytesIO
 
 class AipClient(object):
     '''
@@ -30,8 +30,8 @@ class AipClient(object):
     def options(self):
         return {"language_type":"CHN_ENG",
         "detect_direction":"false",
-        "detect_language":"true",
-        "probability":"true"}
+        "detect_language":"false",
+        "probability":"false"}
 
 
     def General(self, image,**kwargs):
@@ -46,12 +46,16 @@ class AipClient(object):
         hash_value = MD5.md5(image)
         results = self.General(image, **kwargs)
         if results.get('words_result'):
-            self.redis.add(hash_value, results['words_result'][0]['words'])
+            if results.get('words_result') != '*':
+                self.redis.add(hash_value, results['words_result'][0]['words'])
             return results['words_result'][0]['words']
         results = self.Accurate(image)
         if results.get('words_result'):
-            self.redis.add(hash_value, results['words_result'][0]['words'])
+            if results.get('words_result') != '*':
+                self.redis.add(hash_value, results['words_result'][0]['words'])
             return results['words_result'][0]['words']
+        # Image.open(BytesIO(image)).show()
+        # print(hash_value)
         return '*'
 
     def run(self, image, **kwargs):
