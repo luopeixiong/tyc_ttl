@@ -8,7 +8,7 @@
 import os
 
 from core import TycTTF
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 def run(font_key, word):
     obj = TycTTF(font_key)
@@ -20,11 +20,17 @@ def create_app():
     return app
 
 def init_app(app:Flask):
-    @app.route('/api',methods=['GET'])
+    @app.route('/api',methods=['GET', 'POST'])
     def api():
-        font_key = request.args['font_key']
-        word = request.args['word']
-        return run(font_key, word)
+        if request.method == 'GET':
+            font_key = request.args['font_key']
+            word = request.args['word']
+            return jsonify({'result': run(font_key, word)})
+        elif request.method == 'POST':
+            font_key = request.form.get('font_key')
+            word = request.form.get('word')
+            return jsonify({'result': run(font_key, word)})
+        return 'error',404
 
 def main():
     app = create_app()
