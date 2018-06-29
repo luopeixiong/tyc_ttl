@@ -6,3 +6,4 @@ fontTools
 aip
 redis
 baidu-aip
+flask
