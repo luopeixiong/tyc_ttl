@@ -42,25 +42,31 @@ class AipClient(object):
         print('调取Accurate_api  识别')
         return self.client.basicAccurate(image, self.options)
 
-    def orc(self, image,**kwargs):
+    def orc(self, image, font_key, word, **kwargs):
         hash_value = MD5.md5(image)
         results = self.General(image, **kwargs)
         if results.get('words_result'):
             if results.get('words_result') != '*':
-                self.redis.add(hash_value, results['words_result'][0]['words'])
-            return results['words_result'][0]['words']
+                result = results['words_result'][0]['words']
+                self.redis.add(hash_value, result)
+                self.redis.hadd(font_key, word, result)
+            return result
         results = self.Accurate(image)
         if results.get('words_result'):
             if results.get('words_result') != '*':
-                self.redis.add(hash_value, results['words_result'][0]['words'])
-            return results['words_result'][0]['words']
+                result = results['words_result'][0]['words']
+                self.redis.add(hash_value, result)
+                self.redis.hadd(font_key, word, result)
+            return result
         # Image.open(BytesIO(image)).show()
         # print(hash_value)
         return '*'
 
-    def run(self, image, **kwargs):
+    def run(self, image, font_key,word, **kwargs):
         hash_value = MD5.md5(image)
         if self.redis.exists(hash_value):
-            return self.redis.get(hash_value)
+            result = self.redis.get(hash_value)
+            self.redis.hadd(font_key, word, result)
+            return result
         else:
-            return self.orc(image, **kwargs)
+            return self.orc(image, font_key, word, **kwargs)

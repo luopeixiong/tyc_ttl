@@ -6,6 +6,7 @@ from PIL import Image,ImageDraw,ImageFont,ImageOps
 from fontTools.ttLib import TTFont
 import secure
 from helper import ImageBytes
+from db import RedisClient
 
 APP_ID = secure.APP_ID
 API_KEY = secure.API_KEY
@@ -14,15 +15,17 @@ REDIS_URL = secure.REDIS_URL
 
 class TycTTF():
     _instance = {}
-    def __init__(self,url,imgSize=(0,0),imgMode='RGB',bg_color=(0,0,0),fg_color=(255,255,255),fontsize=30):
+    def __init__(self,font_key,url=None,imgSize=(0,0),imgMode='RGB',bg_color=(0,0,0),fg_color=(255,255,255),fontsize=30):
         self.imgSize = imgSize
         self.imgMode = imgMode
         self.fontsize = fontsize
         self.bg_color = bg_color
         self.fg_color = fg_color
-        self.url = url
+        self.font_key = font_key
+        self.url = url or self.make_url
         self.get_ttl()
         self.client = AipClient(APP_ID, API_KEY, SECRET_KEY,REDIS_URL)
+        self.r = RedisClient(REDIS_URL)
 
     def __new__(cls, url, *args, **kw):
         '''
@@ -31,6 +34,10 @@ class TycTTF():
         if url not in cls._instance:
             cls._instance[url] = super().__new__(cls)
         return cls._instance[url]
+
+    @property
+    def make_url(self):
+        return 'https://static.tianyancha.com/fonts-styles/fonts/%s/%s/tyc-num.woff' % (self.font_key[:2],self.font_key)
 
     def get_ttl(self):
         res = requests.get(self.url)
@@ -58,7 +65,7 @@ class TycTTF():
         # 从font对象内获取 letter 映射 文字  并写入空白image对象内
         self.drawBrush.text((textX0,textY0), self.letters, fill=self.fg_color,font=self.font)
 
-    def orc(self, word:str):
+    def _orc(self, word:str):
         # image = pretreat_image(self.img)
         self.GenLetterImage(word)
         # 实例化image容器
@@ -71,7 +78,13 @@ class TycTTF():
         else:
             # 其他使用中英文
             kwarg = {'language_type':'CHN_ENG'}
-        return self.client.run(img.img,**kwarg)
+        return self.client.run(img.img,self.font_key,word,**kwarg)
+
+    def orc(self,word:str):
+        if self.r.hexists(self.url, word):
+            return self.r.hget(self.font_key, word).decode('utf-8')
+        else:
+            return self._orc(word)
 
     def run(self, word:str):
         string = ''
