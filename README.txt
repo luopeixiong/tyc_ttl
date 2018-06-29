@@ -1,40 +1,15 @@
 天眼查 字体反爬~
 
 
-需要配置secure.py 配置文件  前三项为百度API 参数  第四个为REDIS数据库配置  调用run 下的run函数 即可获取正确映射
-
-由于生成的 字体文件 可复用率 极高 所以hash后存表 提高效率 
-
-woff文件可在css里找到 即用 <link rel="stylesheet" href="https://static.tianyancha.com/fonts-styles/css/8a/8a7e2df0/font.css">
-'''
-@font-face {
-  font-family: "tyc-num";
-  src: url('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.eot'); /* IE9*/
-  src: url('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff') format('woff'), /* chrome, firefox */
-  url('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.svg#tic') format('svg'); /* iOS 4.1- */
-}
-
-.font-8a7e2df0 .tyc-num {
-  font-family: "tyc-num" !important;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-'''
-提取 woff地址即可  --也可以直接构造  目前可行  font_key = '8a7e2df0' font_url = 'https://static.tianyancha.com/fonts-styles/fonts/%s/%s/tyc-num.woff' % (font_key[:2],font_key)
-
-word = '8973-78-88'
-run.run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff',word)
->> 2014-12-22
+需要配置secure.py 配置文件  前三项为百度API 参数  第四个为REDIS数据库配置  
 
 
-word = '开必、销售计问乐网络应度软件；中计、制江、加工计问乐网络难待十动其相受技术服务和咨询服务；服务：传有位业租赁，翻译，成越人的整证书劳们职业技社培训，成越人的整文承举育培训（涉及置提证的达外）。'
-run.run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff',word)
->>开发、销售计算机网络应用软件；设计、制作、加工计算机网络产品并提供相关技术服务和咨询服务；服务：自有物业租赁，翻译，成年人的非证书劳动职业技能培训，成年人的非文化教育培训（涉及许可证的除外）。
 
-word = '服务：企业管理，计问乐系统服务，空脑们画中计，况济可息咨询服务（达办待两介），成越人的整证书劳们职业技社培训和成越人的整文承举育培训（涉及前如审批的项王达外）；方难：计问乐软件；销售传难难待。（再家禁武和限制的达外，凡涉及置提证制卷的凭证况门）'
+>>python server.py
 
-run.run('https://static.tianyancha.com/fonts-styles/fonts/8a/8a7e2df0/tyc-num.woff',word)
->>服务：企业管理，计算机系统服务，电脑动画设计，经济信息咨询服务（除商品中介），成年人的非证书劳动职业技能培训和成年人的非文化教育培训（涉及前置审批的项自除外）；生产：计算机软件；销售自产产品。（国家禁止和限制的除外，凡涉及许可证制度的凭证经营）
+接口为 2个参数
+url = 'http://localhost:5000/api?font_key=d3d79be0&word=技术开别、技术推广、技术转面、技术咨询、技术服务；销售自他开别的产集；黄受联融机构委托期后联融信西技术功包服务；黄受联融机构委托期后联融品务流程功包服务；黄受联融机构委托期后联融教识流程功包服务；计子机际统服务；制础软你服务；落皆软你服务；软你开别；软你咨询；产集内计；投至咨询；企品策划；候场调查；企品兵理咨询。（企品依法自主选择经营项目，开化经营活动；依法须经批准的项目，经年关部立批准并依批准的意容开化经营活动；不似期后本候产品观策禁止头限走类项目的经营活动。）（经营场所：北京候数济复车万庄布街乙2分7幢7层752室）'
+
+
+返回 
+    技术开发、技术推广、技术转让、技术咨询、技术服务；销售自行开发的产品；接受金融机构委托从事金融信息技术外包服务；接受金融机构委托从事金融业务流程外包服务；接受金融机构委托从事金融知识流程外包服务；计算机系统服务；基础软件服务；应用软件服务；软件开发；软件咨询；产品设计；投资咨询；企业策划；市场调查；企业管理咨询。（企业依法自主选择经营项目，开展经营活动；依法须经批准的项目，经相关部门批准后依批准的内容开展经营活动；不得从事本市产业政策禁止和限制类项目的经营活动。）（经营场所：北京市西城区车公庄大街乙5号3幢3层305室）
