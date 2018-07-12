@@ -7,7 +7,7 @@ from fontTools.ttLib import TTFont
 import secure
 from helper import ImageBytes
 from db import RedisClient
-
+from user_agent import generate_user_agent
 APP_ID = secure.APP_ID
 API_KEY = secure.API_KEY
 SECRET_KEY = secure.SECRET_KEY
@@ -15,6 +15,7 @@ REDIS_URL = secure.REDIS_URL
 
 class TycTTF():
     _instance = {}
+
     def __init__(self,font_key,url=None,imgSize=(0,0),imgMode='RGB',bg_color=(0,0,0),fg_color=(255,255,255),fontsize=30):
         self.imgSize = imgSize
         self.imgMode = imgMode
@@ -22,11 +23,11 @@ class TycTTF():
         self.bg_color = bg_color
         self.fg_color = fg_color
         self.font_key = font_key
-        self.url = url or self.make_url
+        self.url = self.make_url
         self.get_ttl()
         self.client = AipClient(APP_ID, API_KEY, SECRET_KEY,REDIS_URL)
         self.r = RedisClient(REDIS_URL)
-
+    
     def __new__(cls, url, *args, **kw):
         '''
         伪单例模式 缓存优化
@@ -37,10 +38,13 @@ class TycTTF():
 
     @property
     def make_url(self):
-        return 'https://static.tianyancha.com/fonts-styles/fonts/%s/%s/tyc-num.woff' % (self.font_key[:2],self.font_key)
+        if self.font_key.__len__() == 8:
+            return 'https://static.tianyancha.com/fonts-styles/fonts/%s/%s/tyc-num.woff' % (self.font_key[:2], self.font_key)
+        else:
+            return 'https:' + self.font_key
 
     def get_ttl(self):
-        res = requests.get(self.url)
+        res = requests.get(self.url, headers={'User-Agent':generate_user_agent(os=('win',))},timeout=10)
         # PIL 字体对象
         self.font = ImageFont.truetype(BytesIO(res.content),self.fontsize)
         # ttf字体对象
