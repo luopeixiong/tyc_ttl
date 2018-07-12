@@ -6,3 +6,4 @@ REDIS_URL = 'redis://用户名:密码@host:port'
 FIXED = True
 
 
+

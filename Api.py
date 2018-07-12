@@ -61,8 +61,8 @@ class AipClient(object):
             return result
         if FIXED:
             '''手动修正'''
-            if not os.path.exists(path, os.path.join(BASE_DIR, hash_value)):
-                with open(os.path.join(BASE_DIR, hash_value), 'wb') as f:
+            if not os.path.exists(os.path.join(BASE_DIR, hash_value+'.jpg')):
+                with open(os.path.join(BASE_DIR, hash_value+'.jpg'), 'wb') as f:
                     f.write(image)
         return '*'
 
